@@ -38,13 +38,12 @@ export class UserService {
     }
 }
  
-  async remove(id: number) {
-    const res = await this.userRepository.softDelete(id);
-      if (res){
-          return { message: 'user deleted' };
-      }
-      else {
-          throw new NotFoundException(`le user d'id ${id} n'existe pas` );
-      }
-  }
+async softDeleteUser(id: number) {
+  console.log(id);
+  return await this.userRepository.softDelete(id);
+}
+
+ async restoreUser(id: number) {
+  return await this.userRepository.restore(id);
+}
 }

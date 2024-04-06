@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Skill } from '../../skill/entities/skill.entity';
 import { User } from '../../user/entities/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Cv {
@@ -27,14 +27,13 @@ export class Cv {
   @Column()
   path: string;
 
-  @ManyToOne(() => User, user => user.cvs)
-
-  @ManyToOne(() => User, (user) => user.cvs)
+  @ManyToOne(() => User, (user) => user.cvs, { eager: true })
   user: User;
 
-  @ManyToMany(() => Skill)
+  @ManyToMany(() => Skill, null, { eager: true })
   @JoinTable()
   skills: Skill[];
 
-  
+  @DeleteDateColumn({ nullable: true, default: null })
+  deletedAt: Date; // Soft delete column
 }

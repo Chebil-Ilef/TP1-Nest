@@ -27,10 +27,10 @@ export class CreateCvDto {
     @IsNumber()
     cin:string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     userId: number;
     
-    @IsNotEmpty()
+    @IsOptional()
     skillsIds: number[];
   }

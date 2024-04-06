@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Cv } from '../../cv/entities/cv.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -18,4 +18,8 @@ export class User {
 
   @OneToMany(() => Cv, (cv) => cv.user)
   cvs: Cv[];
+
+  @DeleteDateColumn({ nullable: true, default: null })
+  deletedAt: Date; // Soft delete column
+
 }

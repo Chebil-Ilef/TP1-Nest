@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { Skill } from './entities/skill.entity';
 import { CreateSkillDto } from './dto/skill-create.dto';
@@ -20,17 +20,22 @@ export class SkillController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number):Promise<Skill> {
+  findOne(@Param('id', ParseIntPipe) id: number):Promise<Skill> {
     return this.skillService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateSkillDto: UpdateSkillDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateSkillDto: UpdateSkillDto) {
     return this.skillService.update(id, updateSkillDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.skillService.remove(id);
   }
+
+  @Get('restore/:id')
+  async restoreUser(@Param('id', ParseIntPipe) id: number) {
+  return await this.skillService.restoreSkill(id);
+}
 }
