@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cv } from './entities/cv.entity';
@@ -13,7 +12,18 @@ constructor(@InjectRepository(Cv)
   private cvRepository : Repository<Cv> ){}
   
   async create(newCv: CreateCvDto) {
-    return await this.cvRepository.save(newCv);;
+    const cv = new Cv();
+    cv.name = newCv.name;
+    cv.firstname = newCv.firstname;
+    cv.age = newCv.age;
+    cv.cin = newCv.cin;
+    cv.job = newCv.job;
+    cv.path = newCv.path;
+    cv.user = { id: newCv.userId } as any;
+    cv.skills = newCv.skillsIds.map((id) => ({ id } as any));
+    console.log(cv);
+
+    return await this.cvRepository.save(cv);
   }
 
   async findAll():Promise<Cv[]> {

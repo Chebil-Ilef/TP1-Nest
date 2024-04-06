@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { SeedService } from './seed.service';
+import { UserModule } from '../user/user.module';
 import { CvModule } from '../cv/cv.module';
 import { SkillModule } from '../skill/skill.module';
-import { UserModule } from '../user/user.module';
+import { SeedService } from './seed.service';
 
 @Module({
   imports: [CvModule, SkillModule, UserModule],
@@ -11,5 +11,4 @@ import { UserModule } from '../user/user.module';
   exports: [SeedService],
 })
 export class SeedModule {}
-
 

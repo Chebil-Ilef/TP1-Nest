@@ -12,6 +12,8 @@ constructor(@InjectRepository(Skill)
   private skillRepository : Repository<Skill> ){}
   
   async create(newSkill: CreateSkillDto):Promise<Skill> {
+    console.log(newSkill);
+
     return await this.skillRepository.save(newSkill);;
   }
 

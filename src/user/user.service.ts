@@ -2,9 +2,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/user-create.dto';
 import { UpdateUserDto } from './dto/user-update.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -26,13 +26,13 @@ export class UserService {
     if (!user){
       throw new NotFoundException(`le user d'id ${id} n'existe pas` );
    }
-   return user;
+   return await user;
   }
 
   async update(id: number, updatedUser:UpdateUserDto): Promise<User> {
     const  newUser = await this.userRepository.preload({id,...updatedUser,});
     if (newUser) {
-      return this.userRepository.save(newUser);
+      return await this.userRepository.save(newUser);
     } else {
       throw new NotFoundException('user inexistant');
     }
