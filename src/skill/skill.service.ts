@@ -38,11 +38,11 @@ constructor(@InjectRepository(Skill)
 }
  
   async remove(id: number) {
-    const skillToDelete=await this.skillRepository.findOne({where:{id}});
-    if(!skillToDelete){
-        throw new NotFoundException("Le skill d'id ${id} n'existe pas");
-    }
+    
+        return await this.skillRepository.softDelete(id);
+}
 
-        return await this.skillRepository.remove(skillToDelete);
+async restoreSkill(id: number) {
+  return await this.skillRepository.restore(id);
 }
 }

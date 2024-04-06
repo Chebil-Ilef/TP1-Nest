@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Cv } from '../../cv/entities/cv.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Skill {
@@ -13,4 +13,6 @@ export class Skill {
   @ManyToMany(() => Cv, (cv) => cv.skills)
   cvs: Cv[];
 
+  @DeleteDateColumn({ nullable: true, default: null })
+  deletedAt: Date; // Soft delete column
 }

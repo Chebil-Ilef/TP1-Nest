@@ -1,5 +1,12 @@
 /* eslint-disable prettier/prettier */
+import { IsNumber, IsOptional, IsString } from "class-validator";
+
 export class FindCvsDto {
-    readonly search?: string;
-    readonly age?: number;
+    @IsOptional()
+    @IsString()
+    critere: string;
+    
+    @IsOptional()
+    @IsNumber()
+    readonly age: number;
   }
