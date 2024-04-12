@@ -26,6 +26,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/config/multer-config';
 
 
+
 @Controller('v2/cv')
 export class CvControllerV2 {
   constructor(private readonly cvService: CvService) {}
@@ -39,6 +40,7 @@ export class CvControllerV2 {
     console.log(file);
     const updatedCreateCvDto = { ...createCvDto, userId: req.userId };
     console.log(req.userId);
+
     return this.cvService.create(updatedCreateCvDto);
   }
 
@@ -78,6 +80,7 @@ export class CvControllerV2 {
 
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number, @Request() req) {
+
     console.log(req.userId);
     const cv = await this.cvService.findOne(+id);
     if (cv.user.id === req.userId) {
@@ -92,6 +95,7 @@ export class CvControllerV2 {
   @Get('restore/:id')
   async restoreUser(@Param('id', ParseIntPipe) id: number, @Request() req) {
     const cv = await this.cvService.findOne(+id);
+
     if (cv.user.id === req.userId) {
       return await this.cvService.restoreCv(id);
     } else {
@@ -100,6 +104,7 @@ export class CvControllerV2 {
       );
     }
   }
+
   @Patch('upload/:id')
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async uploadFile(@Param('id') id: number, @UploadedFile() file) {
@@ -115,3 +120,4 @@ export class CvControllerV2 {
     };
   }
 }
+

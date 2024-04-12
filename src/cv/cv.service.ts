@@ -95,6 +95,7 @@ async findAllPaginated(paginationQuery: PaginationQueryDto): Promise<any> {
   };
 }
 
+
 async attachImagePath(id: number, path: string): Promise<Cv> {
   const cv = await this.cvRepository.findOneOrFail({ where: { id } });
   cv.path = path;
