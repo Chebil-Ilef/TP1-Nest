@@ -11,6 +11,10 @@ import {
   Query,
   Request,
   ForbiddenException,
+  UseInterceptors,
+  HttpStatus,
+  UploadedFile,
+  HttpException,
 } from '@nestjs/common';
 import { CvService } from './cv.service';
 import { Cv } from './entities/cv.entity';
@@ -18,15 +22,23 @@ import { CreateCvDto } from './dto/cv-create.dto';
 import { UpdateCvDto } from './dto/cv-update.dto';
 import { FindCvsDto } from './dto/find-cvs.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/config/multer-config';
+
 
 @Controller('v2/cv')
 export class CvControllerV2 {
   constructor(private readonly cvService: CvService) {}
 
   @Post()
-  async create(@Body() createCvDto: CreateCvDto, @Request() req) {
-    const updatedCreateCvDto = { ...createCvDto, userId: req.user.userId };
-    console.log(req.user.userId);
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async create(@Body() createCvDto: CreateCvDto, @Request() req, @UploadedFile() file) {
+    if (!file) {
+      throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
+    }
+    console.log(file);
+    const updatedCreateCvDto = { ...createCvDto, userId: req.userId };
+    console.log(req.userId);
     return this.cvService.create(updatedCreateCvDto);
   }
 
@@ -52,9 +64,10 @@ export class CvControllerV2 {
     @Param('id') id: string,
     @Body() updateCvDto: UpdateCvDto,
     @Request() req,
-  ): Promise<Cv> {
+  ) {
+    console.log(req);
     const cv = await this.cvService.findOne(+id);
-    if (cv.user.id === req.user.userId) {
+    if (cv.user.id === req.userId) {
       return await this.cvService.update(+id, updateCvDto);
     } else {
       throw new ForbiddenException(
@@ -65,8 +78,9 @@ export class CvControllerV2 {
 
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    console.log(req.userId);
     const cv = await this.cvService.findOne(+id);
-    if (cv.user.id === req.user.userId) {
+    if (cv.user.id === req.userId) {
       return await this.cvService.softDeleteCv(id);
     } else {
       throw new ForbiddenException(
@@ -78,12 +92,26 @@ export class CvControllerV2 {
   @Get('restore/:id')
   async restoreUser(@Param('id', ParseIntPipe) id: number, @Request() req) {
     const cv = await this.cvService.findOne(+id);
-    if (cv.user.id === req.user.userId) {
+    if (cv.user.id === req.userId) {
       return await this.cvService.restoreCv(id);
     } else {
       throw new ForbiddenException(
         `Le CV #${id} n'a pas été trouvé ou vous n'avez pas le droit de le modifier`,
       );
     }
+  }
+  @Patch('upload/:id')
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async uploadFile(@Param('id') id: number, @UploadedFile() file) {
+    if (!file) {
+      throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
+    }
+
+    const savedFile = await this.cvService.attachImagePath(id, file.path);
+    console.log(savedFile);
+    return {
+      message: 'File uploaded successfully',
+      data: savedFile,
+    };
   }
 }

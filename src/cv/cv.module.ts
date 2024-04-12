@@ -16,10 +16,12 @@ import { AuthMiddleware } from 'src/middlewares/auth.middleware';
   exports: [CvService, TypeOrmModule.forFeature([Cv])],
 })
 export class CvModule {
-    configure(consumer: MiddlewareConsumer) {
-      consumer
-        .apply(AuthMiddleware)
-        .forRoutes({ path: 'v2/cv', method: RequestMethod.DELETE });
-    }
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        { path: 'v2/cv/*', method: RequestMethod.DELETE },
+        { path: 'v2/cv/*', method: RequestMethod.PATCH }
+      );
+  }
 }
-
