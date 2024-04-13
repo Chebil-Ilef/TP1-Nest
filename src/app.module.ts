@@ -8,6 +8,7 @@ import { CvModule } from './cv/cv.module';
 import { SkillModule } from './skill/skill.module';
 import * as dotenv from 'dotenv';
 import { SeedModule } from './commands/seed.module';
+import { AuthModule } from './auth/auth.module';
 dotenv.config();
 
 @Module({
@@ -28,6 +29,7 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
