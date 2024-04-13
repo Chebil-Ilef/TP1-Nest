@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cv } from './entities/cv.entity';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Cv])],
   controllers: [CvController, CvControllerV2],
