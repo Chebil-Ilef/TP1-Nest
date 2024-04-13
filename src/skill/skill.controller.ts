@@ -4,11 +4,11 @@ import { SkillService } from './skill.service';
 import { Skill } from './entities/skill.entity';
 import { CreateSkillDto } from './dto/skill-create.dto';
 import { UpdateSkillDto } from './dto/skill-update.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 @Controller('skill')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JWTAuthGuard)
 export class SkillController {
   constructor(private readonly skillService: SkillService) {}
 

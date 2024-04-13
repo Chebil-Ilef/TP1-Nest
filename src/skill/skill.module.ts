@@ -4,9 +4,10 @@ import { SkillService } from './skill.service';
 import { SkillController } from './skill.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Skill } from './entities/skill.entity';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Skill])],
+  imports: [TypeOrmModule.forFeature([Skill]), JwtModule],
   controllers: [SkillController],
   providers: [SkillService],
   //ajouté pour l'exportation du service, pour pouvoir l'utiliser dans d'autres modules
