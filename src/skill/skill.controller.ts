@@ -1,11 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards} from '@nestjs/common';
 import { SkillService } from './skill.service';
 import { Skill } from './entities/skill.entity';
 import { CreateSkillDto } from './dto/skill-create.dto';
 import { UpdateSkillDto } from './dto/skill-update.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+
 
 @Controller('skill')
+@UseGuards(JwtAuthGuard)
 export class SkillController {
   constructor(private readonly skillService: SkillService) {}
 

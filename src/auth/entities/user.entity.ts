@@ -3,7 +3,7 @@ import { Exclude } from 'class-transformer';
 import { UserRoleEnum } from 'src/enums/user-role.enum';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
+@Entity('AuthUser')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,7 +27,7 @@ export class User {
 
   @Column()
   @Exclude()
-    salt: string;
+  salt?: string;
 
 
 }

@@ -18,10 +18,11 @@ export class AuthService {
       ) {}
       
       async register(registerAuthDto: UserRegisterDto): Promise<void> {
-        const { username, password } = registerAuthDto;
+        const { username, password, email } = registerAuthDto;
     
         const user = new User();
         user.username = username;
+        user.email = email;
         user.salt = await bcrypt.genSalt();
         user.password = await this.hashPassword(password, user.salt);
     
