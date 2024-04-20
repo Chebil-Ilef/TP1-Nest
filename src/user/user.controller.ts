@@ -1,17 +1,20 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/user-create.dto';
 import { UpdateUserDto } from './dto/user-update.dto';
 import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { UserDec } from 'src/user-dec/user-dec.decorator';
+import { User } from './entities/user.entity';
 
+@UseGuards(AdminGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AdminGuard)
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto, @Request() req){
+    console.log(req);
     return this.userService.create(createUserDto);
   }
 
@@ -21,7 +24,8 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number, @UserDec() user: User){
+    console.log(user);
     return this.userService.findOne(id);
   }
 

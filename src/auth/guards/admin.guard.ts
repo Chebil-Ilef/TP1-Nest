@@ -29,7 +29,6 @@ import {
       } catch {
         throw new UnauthorizedException();
       }
-      return true;
     }
   
     private extractTokenFromHeader(request: Request): string | undefined {
