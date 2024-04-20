@@ -46,4 +46,8 @@ async softDeleteUser(id: number) {
  async restoreUser(id: number) {
   return await this.userRepository.restore(id);
 }
+
+async findUserByEmail(email: string){
+  return await this.userRepository.findOne({where: {email}});
+}
 }

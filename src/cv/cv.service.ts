@@ -8,6 +8,7 @@ import { CreateCvDto } from './dto/cv-create.dto';
 import { UpdateCvDto } from './dto/cv-update.dto';
 import { FindCvsDto } from './dto/find-cvs.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class CvService {
@@ -102,6 +103,12 @@ async attachImagePath(id: number, path: string): Promise<Cv> {
   return this.cvRepository.save(cv);
 }
 
+async findCvCnx(user : User){
+  console.log(user);
+  if (user.role=="admin")
+    return this.cvRepository.find();
+   return this.cvRepository.find({ where: { user: { id: user.id } } });  
+}
 
 
   }

@@ -15,6 +15,7 @@ import {
   HttpStatus,
   UploadedFile,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { CvService } from './cv.service';
 import { Cv } from './entities/cv.entity';
@@ -24,13 +25,17 @@ import { FindCvsDto } from './dto/find-cvs.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerConfig } from 'src/config/multer-config';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { UserDec } from 'src/user-dec/user-dec.decorator';
+import { UserService } from 'src/user/user.service';
+import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 
 
 @Controller('v2/cv')
 export class CvControllerV2 {
-  constructor(private readonly cvService: CvService) {}
-
+  constructor(private readonly cvService: CvService, private readonly userService: UserService) {}
+  
   @Post()
   @UseInterceptors(FileInterceptor('image', multerConfig))
   async create(@Body() createCvDto: CreateCvDto, @Request() req, @UploadedFile() file) {
@@ -40,6 +45,21 @@ export class CvControllerV2 {
     console.log(file);
     const updatedCreateCvDto = { ...createCvDto, userId: req.userId };
     console.log(req.userId);
+
+    return this.cvService.create(updatedCreateCvDto);
+  }
+
+  @Post('/dec')
+  @UseGuards(AdminGuard)
+  @UseInterceptors(FileInterceptor('image', multerConfig))
+  async createDec(@Body() createCvDto: CreateCvDto, @UserDec() user, @UploadedFile() file) {
+    if (!file) {
+      throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
+    }
+    console.log(file);
+    const userFound= await this.userService.findUserByEmail(user.email);
+    const updatedCreateCvDto = { ...createCvDto, userId: userFound.id };
+    console.log(userFound);
 
     return this.cvService.create(updatedCreateCvDto);
   }
@@ -56,10 +76,19 @@ export class CvControllerV2 {
   }
 
 
+  @Get('/connecte')
+  @UseGuards(JWTAuthGuard)
+  async findCvConn(@UserDec() user){
+    console.log(user);
+    return await this.cvService.findCvCnx(user);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.cvService.findOne(+id);
   }
+
+  
 
   @Patch(':id')
   async update(
