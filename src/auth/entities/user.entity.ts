@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Exclude } from 'class-transformer';
-import { UserRoleEnum } from 'src/enums/user-role.enum';
+import { UserRoleEnum } from '../../enums/user-role.enum';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('AuthUser')

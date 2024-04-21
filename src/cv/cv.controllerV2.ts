@@ -24,11 +24,11 @@ import { UpdateCvDto } from './dto/cv-update.dto';
 import { FindCvsDto } from './dto/find-cvs.dto';
 import { PaginationQueryDto } from './dto/pagination-query.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from 'src/config/multer-config';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
-import { UserDec } from 'src/user-dec/user-dec.decorator';
-import { UserService } from 'src/user/user.service';
-import { JWTAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { multerConfig } from '../config/multer-config';
+import { AdminGuard } from '../auth/guards/admin.guard';
+import { UserDec } from '../user-dec/user-dec.decorator';
+import { UserService } from '../user/user.service';
+import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 
 

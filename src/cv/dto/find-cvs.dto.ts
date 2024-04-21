@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { Type } from "class-transformer";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class FindCvsDto {
@@ -8,5 +9,6 @@ export class FindCvsDto {
     
     @IsOptional()
     @IsNumber()
+    @Type(()=> Number)
     readonly age: number;
   }

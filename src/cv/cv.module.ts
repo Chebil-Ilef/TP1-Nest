@@ -5,11 +5,11 @@ import { CvController } from './cv.controller';
 import { CvControllerV2 } from './cv.controllerV2';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Cv } from './entities/cv.entity';
-import { AuthMiddleware } from 'src/middlewares/auth.middleware';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
+import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtModule } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
-import { UserModule } from 'src/user/user.module';
+import { UserService } from '../user/user.service';
+import { UserModule } from '../user/user.module';
 
 
 @Module({

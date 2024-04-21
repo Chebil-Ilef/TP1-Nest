@@ -3,8 +3,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGua
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/user-create.dto';
 import { UpdateUserDto } from './dto/user-update.dto';
-import { AdminGuard } from 'src/auth/guards/admin.guard';
-import { UserDec } from 'src/user-dec/user-dec.decorator';
+import { AdminGuard } from '../auth/guards/admin.guard';
+import { UserDec } from '../user-dec/user-dec.decorator';
 import { User } from './entities/user.entity';
 
 @UseGuards(AdminGuard)
