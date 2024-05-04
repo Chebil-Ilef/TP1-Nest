@@ -19,7 +19,7 @@ import { FindCvsDto } from './dto/find-cvs.dto';
 @Controller('cv')
 export class CvController {
   constructor(private readonly cvService: CvService) {}
-
+  /*
   @Post()
   async create(@Body() createCvDto: CreateCvDto): Promise<Cv> {
     return await this.cvService.create(createCvDto);
@@ -56,5 +56,5 @@ export class CvController {
   @Get('restore/:id')
   async restoreUser(@Param('id', ParseIntPipe) id: number) {
     return await this.cvService.restoreCv(id);
-  }
+  }*/
 }

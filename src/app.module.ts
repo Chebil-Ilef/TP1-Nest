@@ -9,6 +9,7 @@ import { SkillModule } from './skill/skill.module';
 import * as dotenv from 'dotenv';
 import { SeedModule } from './commands/seed.module';
 import { AuthModule } from './auth/auth.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 dotenv.config();
 
 @Module({
@@ -19,7 +20,7 @@ dotenv.config();
     UserModule,
     SeedModule,
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
@@ -27,9 +28,10 @@ dotenv.config();
       database: process.env.DB_NAME,
       entities: ['dist/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

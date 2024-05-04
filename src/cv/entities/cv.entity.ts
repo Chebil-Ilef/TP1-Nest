@@ -1,11 +1,20 @@
 /* eslint-disable prettier/prettier */
 import { Skill } from '../../skill/entities/skill.entity';
 import { User } from '../../user/entities/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  DeleteDateColumn,
+  OneToMany,
+} from 'typeorm';
+import { CvHistory } from './cv_history.entity';
 
 @Entity()
 export class Cv {
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,8 +33,11 @@ export class Cv {
   @Column()
   job: string;
 
-  @Column()
+  @Column({ nullable: true })
   path: string;
+
+  @Column({ nullable: true })
+  userId: number;
 
   @ManyToOne(() => User, (user) => user.cvs, { eager: true })
   user: User;
@@ -33,6 +45,9 @@ export class Cv {
   @ManyToMany(() => Skill, null, { eager: true })
   @JoinTable()
   skills: Skill[];
+
+  @OneToMany(() => CvHistory, (cvHistory) => cvHistory.cv, { eager: true })
+  cvHistories: CvHistory[];
 
   @DeleteDateColumn({ nullable: true, default: null })
   deletedAt: Date; // Soft delete column

@@ -30,38 +30,50 @@ import { UserDec } from '../user-dec/user-dec.decorator';
 import { UserService } from '../user/user.service';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-
-
 @Controller('v2/cv')
 export class CvControllerV2 {
-  constructor(private readonly cvService: CvService, private readonly userService: UserService) {}
-  
+  constructor(
+    private readonly cvService: CvService,
+    private readonly userService: UserService,
+  ) {}
+
   @Post()
   @UseInterceptors(FileInterceptor('image', multerConfig))
-  async create(@Body() createCvDto: CreateCvDto, @Request() req, @UploadedFile() file) {
+  @UseGuards(JWTAuthGuard)
+  async create(
+    @Body() createCvDto: CreateCvDto,
+    @Request() req,
+    @UploadedFile() file,
+  ) {
     if (!file) {
       throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
     }
     console.log(file);
     const updatedCreateCvDto = { ...createCvDto, userId: req.userId };
-    console.log(req.userId);
+    console.log('LASMER');
 
-    return this.cvService.create(updatedCreateCvDto);
+    console.log(req.user.userId);
+
+    return this.cvService.create(updatedCreateCvDto, req.user.userId);
   }
 
   @Post('/dec')
   @UseGuards(AdminGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig))
-  async createDec(@Body() createCvDto: CreateCvDto, @UserDec() user, @UploadedFile() file) {
+  async createDec(
+    @Body() createCvDto: CreateCvDto,
+    @UserDec() user,
+    @UploadedFile() file,
+  ) {
     if (!file) {
       throw new HttpException('File upload failed', HttpStatus.BAD_REQUEST);
     }
     console.log(file);
-    const userFound= await this.userService.findUserByEmail(user.email);
+    const userFound = await this.userService.findUserByEmail(user.email);
     const updatedCreateCvDto = { ...createCvDto, userId: userFound.id };
     console.log(userFound);
 
-    return this.cvService.create(updatedCreateCvDto);
+    return this.cvService.create(updatedCreateCvDto, user.id);
   }
 
   @Get('find')
@@ -75,10 +87,9 @@ export class CvControllerV2 {
     return this.cvService.findAllPaginated(paginationQuery);
   }
 
-
   @Get('/connecte')
   @UseGuards(JWTAuthGuard)
-  async findCvConn(@UserDec() user){
+  async findCvConn(@UserDec() user) {
     console.log(user);
     return await this.cvService.findCvCnx(user);
   }
@@ -88,37 +99,24 @@ export class CvControllerV2 {
     return await this.cvService.findOne(+id);
   }
 
-  
-
   @Patch(':id')
+  @UseGuards(JWTAuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateCvDto: UpdateCvDto,
     @Request() req,
   ) {
-    console.log(req);
     const cv = await this.cvService.findOne(+id);
-    if (cv.user.id === req.userId) {
-      return await this.cvService.update(+id, updateCvDto);
-    } else {
-      throw new ForbiddenException(
-        `Le CV #${id} n'a pas été trouvé ou vous n'avez pas le droit de le modifier`,
-      );
-    }
+    return await this.cvService.update(+id, updateCvDto, req.user.userId);
   }
 
   @Delete(':id')
+  @UseGuards(JWTAuthGuard)
   async deleteUser(@Param('id', ParseIntPipe) id: number, @Request() req) {
-
     console.log(req.userId);
     const cv = await this.cvService.findOne(+id);
-    if (cv.user.id === req.userId) {
-      return await this.cvService.softDeleteCv(id);
-    } else {
-      throw new ForbiddenException(
-        `Le CV #${id} n'a pas été trouvé ou vous n'avez pas le droit de le modifier`,
-      );
-    }
+
+    return await this.cvService.softDeleteCv(id, req.user.userId);
   }
 
   @Get('restore/:id')
@@ -149,4 +147,3 @@ export class CvControllerV2 {
     };
   }
 }
-

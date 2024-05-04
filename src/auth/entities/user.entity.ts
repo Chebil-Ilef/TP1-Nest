@@ -1,7 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Exclude } from 'class-transformer';
 import { UserRoleEnum } from '../../enums/user-role.enum';
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { CvHistory } from 'src/cv/entities/cv_history.entity';
 
 @Entity('AuthUser')
 export class User {
@@ -17,8 +18,8 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRoleEnum,
-    default: UserRoleEnum.USER
-})
+    default: UserRoleEnum.USER,
+  })
   role: string;
 
   @Column()
@@ -29,5 +30,6 @@ export class User {
   @Exclude()
   salt?: string;
 
-
+  @OneToMany(() => CvHistory, (cvHistory) => cvHistory.user, { eager: true })
+  cvHistories: CvHistory[];
 }

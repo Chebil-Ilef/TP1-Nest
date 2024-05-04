@@ -56,9 +56,8 @@ export class SeedService {
         path: `cv-${i}.pdf`,
         userId: userIds[randNumber({ min: 0, max: userIds.length - 1 })],
         skillsIds: skillIds,
-        
       };
-      await this.cvService.create(cvDto);
+      await this.cvService.create(cvDto, 1);
     }
   }
 
