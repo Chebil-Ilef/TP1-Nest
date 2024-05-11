@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Skill } from '../../skill/entities/skill.entity';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
 import {
   Entity,
   Column,
@@ -11,7 +11,7 @@ import {
   DeleteDateColumn,
   OneToMany,
 } from 'typeorm';
-import { CvHistory } from './cv_history.entity';
+import { CvHistory } from 'src/cv-history/entities/cv-history.entity';
 
 @Entity()
 export class Cv {

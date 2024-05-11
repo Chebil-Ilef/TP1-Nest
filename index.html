@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SSE Example</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      #events {
+        margin-top: 20px;
+      }
+      .event {
+        background: #f0f0f0;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Server-Sent Events Test</h1>
+    <div id="events"></div>
+
+    <script>
+      const authToken =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiQWFtcm91Y2giLCJlbWFpbCI6ImFhbXJvdWNoQGdtYWlsLmRlIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MTUzODYxMDksImV4cCI6MTcxNTM4OTcwOX0.qZwgioUF_a9mYA0UdkhZuzuoXLbKVXiivnT9gz1Y3VA';
+      const eventSource = new EventSource(
+        'http://localhost:3000/events/subscribe',
+        {
+          headers: {
+            authorization: 'Bearer ' + authToken,
+          },
+        },
+      );
+
+      console.log('eventSource', eventSource);
+
+      eventSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        const eventContainer = document.getElementById('events');
+        const eventElement = document.createElement('div');
+        eventElement.className = 'event';
+        eventElement.textContent = 'New User Added: ' + event.data;
+
+        eventContainer.appendChild(eventElement);
+      };
+
+      eventSource.onerror = function (error) {
+        console.error('EventSource failed:', error);
+        eventSource.close();
+      };
+    </script>
+  </body>
+</html>

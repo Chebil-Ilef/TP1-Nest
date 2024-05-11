@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { EventEnum } from './enum/event.enum';
+import { EventEnum } from '../cv/enum/event.enum';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CvHistory } from './entities/cv_history.entity';
+import { CvHistory } from './entities/cv-history.entity';
 import { Repository } from 'typeorm';
-import { CvHistoryDto } from './dto/cv-history.dto';
+import { CvHistoryDto } from './dto/create-cv-history.dto';
+import { SseService } from 'src/sse/sse.service';
 
 @Injectable()
 export class CvListener {
   constructor(
     @InjectRepository(CvHistory)
     private cvHistoryRepository: Repository<CvHistory>,
+    private sseService: SseService,
   ) {}
 
   @OnEvent(EventEnum.CV_CREATED)
@@ -29,18 +31,27 @@ export class CvListener {
   }
 
   async createCvHistory(type: string, payload: any) {
-    console.log('Creating CV History');
+    try {
+      this.sseService.sendToAdmins({
+        actionType: type,
+        data: payload,
+      });
 
-    // const cvHistory = this.cvHistoryRepository.create({
-    //   type,
-    //   user: { id: payload.userId },
-    //   cv: { id: payload.cvId },
-    // });
+      this.sseService.sendToSpecificUser(payload.userId, {
+        actionType: type,
+        data: payload,
+      });
+    } catch (error) {
+      console.log('Something went wrong !!');
+      console.log(error);
+    }
 
-    return this.cvHistoryRepository.save({
+    let result = await this.cvHistoryRepository.save({
       type,
       userId: payload.userId,
       cvId: payload.cv.id,
     });
+
+    return result;
   }
 }

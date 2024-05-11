@@ -19,13 +19,24 @@ export class CvService {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  async create(newCv: CreateCvDto, userId: number) {
-    const cv = await this.cvRepository.save(newCv);
-    this.eventEmitter.emit('cv.created', {
-      cv,
-      userId,
-    });
-    return cv;
+  async create(newCv: CreateCvDto, userId: number, path: string) {
+    const cv = new Cv();
+    cv.name = newCv.name;
+    cv.firstname = newCv.firstname;
+    cv.age = newCv.age;
+    cv.job = newCv.job;
+    cv.cin = newCv.cin;
+    cv.userId = userId;
+    cv.path = path;
+
+    const savedCv = await this.cvRepository.save(cv);
+    if (savedCv) {
+      this.eventEmitter.emit('cv.created', {
+        cv: savedCv,
+        userId,
+      });
+    }
+    return savedCv;
   }
 
   async findAll(): Promise<Cv[]> {

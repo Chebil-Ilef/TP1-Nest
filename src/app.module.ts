@@ -10,6 +10,9 @@ import * as dotenv from 'dotenv';
 import { SeedModule } from './commands/seed.module';
 import { AuthModule } from './auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SseModule } from './sse/sse.module';
+import { CvHistoryModule } from './cv-history/cv-history.module';
+
 dotenv.config();
 
 @Module({
@@ -32,6 +35,8 @@ dotenv.config();
     }),
     AuthModule,
     EventEmitterModule.forRoot(),
+    SseModule,
+    CvHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

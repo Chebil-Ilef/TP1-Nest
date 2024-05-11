@@ -3,12 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  ManyToMany,
-  JoinTable,
-  DeleteDateColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { Cv } from './cv.entity';
+import { Cv } from 'src/cv/entities/cv.entity';
 import { User } from 'src/auth/entities/user.entity';
 
 @Entity()

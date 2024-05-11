@@ -57,7 +57,7 @@ export class SeedService {
         userId: userIds[randNumber({ min: 0, max: userIds.length - 1 })],
         skillsIds: skillIds,
       };
-      await this.cvService.create(cvDto, 1);
+      //await this.cvService.create(cvDto, 1);
     }
   }
 

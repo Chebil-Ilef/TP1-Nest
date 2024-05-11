@@ -29,12 +29,14 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 import { UserDec } from '../user-dec/user-dec.decorator';
 import { UserService } from '../user/user.service';
 import { JWTAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller('v2/cv')
 export class CvControllerV2 {
   constructor(
     private readonly cvService: CvService,
     private readonly userService: UserService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   @Post()
@@ -50,11 +52,16 @@ export class CvControllerV2 {
     }
     console.log(file);
     const updatedCreateCvDto = { ...createCvDto, userId: req.userId };
-    console.log('LASMER');
 
     console.log(req.user.userId);
 
-    return this.cvService.create(updatedCreateCvDto, req.user.userId);
+    const cvCreated = await this.cvService.create(
+      updatedCreateCvDto,
+      req.user.userId,
+      file.path,
+    );
+
+    return cvCreated;
   }
 
   @Post('/dec')
@@ -73,7 +80,7 @@ export class CvControllerV2 {
     const updatedCreateCvDto = { ...createCvDto, userId: userFound.id };
     console.log(userFound);
 
-    return this.cvService.create(updatedCreateCvDto, user.id);
+    return this.cvService.create(updatedCreateCvDto, user.id, file.path);
   }
 
   @Get('find')

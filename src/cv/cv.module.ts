@@ -10,15 +10,18 @@ import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { UserModule } from '../user/user.module';
-import { CvListener } from './cv.listener';
-import { CvHistory } from './entities/cv_history.entity';
+import { CvHistoryModule } from 'src/cv-history/cv-history.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cv, CvHistory]), JwtModule, UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Cv]),
+    JwtModule,
+    UserModule,
+    CvHistoryModule,
+  ],
   controllers: [CvController, CvControllerV2],
-  providers: [CvService, AdminGuard, UserService, CvListener],
-  //ajouté pour l'exportation du service, pour pouvoir l'utiliser dans d'autres modules
-  // tq le module seed
+  providers: [CvService, AdminGuard, UserService],
+
   exports: [CvService, TypeOrmModule.forFeature([Cv])],
 })
 export class CvModule {

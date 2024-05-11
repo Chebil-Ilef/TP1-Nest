@@ -2,7 +2,8 @@
 import { Exclude } from 'class-transformer';
 import { UserRoleEnum } from '../../enums/user-role.enum';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { CvHistory } from 'src/cv/entities/cv_history.entity';
+import { CvHistory } from 'src/cv-history/entities/cv-history.entity';
+import { Cv } from 'src/cv/entities/cv.entity';
 
 @Entity('AuthUser')
 export class User {
@@ -29,6 +30,9 @@ export class User {
   @Column()
   @Exclude()
   salt?: string;
+
+  @OneToMany(() => Cv, (Cv) => Cv.user)
+  cvs: Cv[];
 
   @OneToMany(() => CvHistory, (cvHistory) => cvHistory.user, { eager: true })
   cvHistories: CvHistory[];
