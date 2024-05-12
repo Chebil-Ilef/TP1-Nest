@@ -113,7 +113,6 @@ export class CvControllerV2 {
     @Body() updateCvDto: UpdateCvDto,
     @Request() req,
   ) {
-    const cv = await this.cvService.findOne(+id);
     return await this.cvService.update(+id, updateCvDto, req.user.userId);
   }
 
